@@ -18,14 +18,14 @@ public class Functions {
     private void connect() throws ClassNotFoundException, SQLException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         try {
-            String username = "sa";
-            String password = "kniza123##@";
+            String username = "";
+            String password = "";
             String url = "jdbc:sqlserver://sakadream-sof305.database.windows.net:1433;databaseName=SOF305";
 
             conn = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
-            String username = "sa";
-            String password = "kniza123##@";
+            String username = "";
+            String password = "";
             String url = "jdbc:sqlserver://localhost:1433;databaseName=SOF305_Offline";
 
             conn = DriverManager.getConnection(url, username, password);
