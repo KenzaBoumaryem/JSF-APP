@@ -23,8 +23,8 @@ public class Functions {
 
             conn = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
-            String username = "";
-            String password = "";
+            String username = "sa";
+            String password = "kniza123##@";
             String url = "jdbc:sqlserver://localhost:1433;databaseName=SOF305_Offline";
 
             conn = DriverManager.getConnection(url, username, password);

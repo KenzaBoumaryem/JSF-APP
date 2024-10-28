@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.faces.context.ExternalContext;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * ProductController for managing products.
@@ -72,5 +75,37 @@ public class ProductController implements Serializable {
 
         func.deleteProduct(id); // Ensure this method exists in Functions
         return "home"; // Redirect after deletion
+    }
+
+    public void downloadProductInfo(Product product) throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        externalContext.setResponseContentType("application/octet-stream");
+        externalContext.setResponseHeader("Content-Disposition", "attachment;filename=Product_" + product.getId() + ".txt");
+
+        OutputStream outputStream = null;
+        try {
+            outputStream = externalContext.getResponseOutputStream();
+            String productData = "Product ID: " + product.getId() + "\n" +
+                    "Name: " + product.getName() + "\n" +
+                    "Description: " + product.getDescription() + "\n" +
+                    "Price: " + product.getPrice() + "\n" +
+                    "Quantity: " + product.getQuantity() + "\n";
+
+            outputStream.write(productData.getBytes());
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            facesContext.responseComplete();
+        }
     }
 }
