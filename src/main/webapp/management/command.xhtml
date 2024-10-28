@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>Create Command - JSF Application</title>
+</h:head>
+<h:body>
+    <h:form id="commandForm">
+        <h2>Create Command</h2>
+
+        <b:panel title="Command Details" look="default">
+            <!-- Provider Selection -->
+            <b:formGroup label="Select Provider:" labelCol="col-md-2" inputCol="col-md-10">
+                <b:selectOneMenu value="#{commandBean.selectedProviderId}">
+                    <f:selectItems value="#{commandBean.providers}" var="provider" itemValue="#{provider.id}" itemLabel="#{provider.name}"/>
+                </b:selectOneMenu>
+            </b:formGroup>
+
+            <!-- Command Name -->
+            <b:formGroup label="Command Name:" labelCol="col-md-2" inputCol="col-md-10">
+                <b:inputText value="#{commandBean.commandName}" placeholder="Enter command name" />
+            </b:formGroup>
+
+            <!-- Products Section -->
+            <h3>Products</h3>
+            <ui:repeat value="#{commandBean.productList}" var="productOrder">
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Product: " for="product"/>
+                    <h:selectOneMenu id="product" value="#{productOrder.product}">
+                        <f:selectItems value="#{commandBean.products}" var="product"
+                                       itemValue="#{product}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Quantity: " for="quantity"/>
+                    <h:inputText id="quantity" value="#{productOrder.quantity}"/>
+                </h:panelGrid>
+            </ui:repeat>
+
+
+            <!-- Add Product Button -->
+            <b:commandButton value="Add Product" look="info" action="#{commandBean.addProductOrder}" update="@form" />
+
+            <!-- Submit Button -->
+            <b:commandButton value="Submit Command" look="primary" action="#{commandBean.submitCommand}" />
+        </b:panel>
+    </h:form>
+</h:body>
+</html>

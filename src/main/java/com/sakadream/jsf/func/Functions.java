@@ -15,18 +15,38 @@ public class Functions {
 
 
     private void connect() throws ClassNotFoundException, SQLException {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         try {
-            String username = "";
-            String password = "";
-            String url = "jdbc:sqlserver://sakadream-sof305.database.windows.net:1433;databaseName=SOF305";
+            String username = "root"; // Replace with your MySQL username
+            String password = "18620"; // Replace with your MySQL password
+            String url = "jdbc:mysql://localhost:3306/"; // Just connect to the host
 
+            // Connect to MySQL
             conn = DriverManager.getConnection(url, username, password);
-        } catch (Exception e) {
-            String username = "";
-            String password = "";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=SOF305_Offline";
 
+            // Create database if it doesn't exist
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS employeeDB");
+            stmt.close();
+
+            // Now connect to the specific database
+            url = "jdbc:mysql://localhost:3306/employeeDB"; // Connect to the specific database
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            String username = "root"; // Replace with your local MySQL username
+            String password = "18620"; // Replace with your local MySQL password
+            String url = "jdbc:mysql://localhost:3306/"; // Just connect to the host
+
+            // Connect to local MySQL
+            conn = DriverManager.getConnection(url, username, password);
+
+            // Create database if it doesn't exist
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS employeeDB");
+            stmt.close();
+
+            // Now connect to the specific local database
+            url = "jdbc:mysql://localhost:3306/employeeDB"; // Connect to the specific local database
             conn = DriverManager.getConnection(url, username, password);
         }
     }
