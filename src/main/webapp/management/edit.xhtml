@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Edit Employee - JSF Application</title>
+    <title>Edit Product - JSF Application</title>
 </h:head>
 <h:body style="padding: 60px; min-height: 2000px;">
     <b:navBar brand="JSF Example" brandHref="#" fixed="top" inverse="true">
@@ -23,35 +23,30 @@
     </b:navBar>
     <b:container>
         <b:form id="editForm">
-            <c:set value="#{emp.getEmployee()}" var="employee"/>
-            <legend>Edit Employee</legend>
-            <h:inputHidden id="id" name="id" value="#{employee.id}"/>
-            <b:inputText id="fullName" name="fullName" value="#{employee.fullName}" placeholder="Full Name" required="true">
+            <c:set value="#{prod.getProduct()}" var="product"/>
+            <legend>Edit Product</legend>
+            <h:inputHidden id="id" name="id" value="#{product.id}"/>
+            <b:inputText id="productName" name="name" value="#{product.name}" placeholder="Product Name" required="true">
                 <f:facet name="prepend">
-                    <b:icon name="user" />
+                    <b:icon name="tag" />
                 </f:facet>
             </b:inputText>
-            <b:inputText id="address" name="address" value="#{employee.address}" placeholder="Address" required="true">
+            <b:inputText id="description" name="description" value="#{product.description}" placeholder="Description" required="true">
                 <f:facet name="prepend">
-                    <b:icon name="home" />
+                    <b:icon name="clipboard" />
                 </f:facet>
             </b:inputText>
-            <b:inputText id="email" name="email" value="#{employee.email}" placeholder="Email" required="true">
-                <f:facet name="prepend">
-                    <b:icon name="inbox" />
-                </f:facet>
-            </b:inputText>
-            <b:inputText id="phone" name="phone" value="#{employee.phone}" placeholder="Phone" required="true">
-                <f:facet name="prepend">
-                    <b:icon name="phone-alt" />
-                </f:facet>
-            </b:inputText>
-            <b:inputText id="salary" name="salary" value="#{employee.salary}" placeholder="Salary" required="true">
+            <b:inputText id="price" name="price" value="#{product.price}" placeholder="Price" required="true">
                 <f:facet name="prepend">
                     <b:icon name="usd" />
                 </f:facet>
             </b:inputText>
-            <b:commandButton look="primary" style="margin-right: 10px" action="#{emp.editEmployee()}" value="Edit"></b:commandButton>
+            <b:inputText id="quantity" name="quantity" value="#{product.quantity}" placeholder="Quantity" required="true">
+                <f:facet name="prepend">
+                    <b:icon name="box-open" />
+                </f:facet>
+            </b:inputText>
+            <b:commandButton look="primary" style="margin-right: 10px" action="#{prod.editProduct()}" value="Edit"></b:commandButton>
             <b:button look="default" outcome="home" value="Back to Home"></b:button>
         </b:form>
     </b:container>

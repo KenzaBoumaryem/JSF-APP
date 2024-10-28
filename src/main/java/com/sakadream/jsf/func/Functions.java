@@ -1,6 +1,6 @@
 package com.sakadream.jsf.func;
 
-import com.sakadream.jsf.bean.Employee;
+import com.sakadream.jsf.bean.Product;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +18,14 @@ public class Functions {
     private void connect() throws ClassNotFoundException, SQLException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         try {
-            String username = "BaHaiPhan";
-            String password = "sof305@PT11303";
+            String username = "sa";
+            String password = "kniza123##@";
             String url = "jdbc:sqlserver://sakadream-sof305.database.windows.net:1433;databaseName=SOF305";
 
             conn = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
             String username = "sa";
-            String password = "31011997";
+            String password = "kniza123##@";
             String url = "jdbc:sqlserver://localhost:1433;databaseName=SOF305_Offline";
 
             conn = DriverManager.getConnection(url, username, password);
@@ -65,102 +65,83 @@ public class Functions {
         session.setAttribute("username", username);
     }
 
-    public List<Employee> showAllEmployees() throws SQLException, ClassNotFoundException {
-        List<Employee> listEmp = new ArrayList<Employee>();
+    public List<Product> showAllProducts() throws SQLException, ClassNotFoundException {
+        List<Product> productList = new ArrayList<Product>();
 
         connect();
 
-        PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM EMPLOYEES");
+        PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM PRODUCTS");
         ResultSet resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            Employee employee = new Employee(resultSet.getInt(1), resultSet.getString(2),
-                    resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
-                    resultSet.getInt(6));
-            listEmp.add(employee);
+            Product product = new Product(resultSet.getInt("ID"), resultSet.getString("NAME"),
+                    resultSet.getString("DESCRIPTION"), resultSet.getDouble("PRICE"),
+                    resultSet.getInt("QUANTITY"));
+            productList.add(product);
         }
 
         cleanConnection();
 
-        return listEmp;
+        return productList;
     }
 
-    public Employee getEmployeeById(int id) throws SQLException, ClassNotFoundException {
-        Employee employee = new Employee();
+    public Product getProductById(int id) throws SQLException, ClassNotFoundException {
+        Product product = new Product();
 
         connect();
 
-        PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM EMPLOYEES WHERE ID = ?");
+        PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM PRODUCTS WHERE ID = ?");
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if(resultSet.next()) employee = new Employee(resultSet.getInt(1), resultSet.getString(2),
-                resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
-                resultSet.getInt(6));
+        if (resultSet.next()) {
+            product = new Product(resultSet.getInt("ID"), resultSet.getString("NAME"),
+                    resultSet.getString("DESCRIPTION"), resultSet.getDouble("PRICE"),
+                    resultSet.getInt("QUANTITY"));
+        }
 
         cleanConnection();
 
-        return employee;
+        return product;
     }
 
-    public Employee getEmployeeByName(String name) throws SQLException, ClassNotFoundException {
-        Employee employee = new Employee();
-
+    public void addProduct(String name, String description, double price, int quantity)
+            throws SQLException, ClassNotFoundException {
         connect();
 
-        PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM EMPLOYEES WHERE FULLNAME LIKE ?");
+        PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO PRODUCTS" +
+                "(NAME, DESCRIPTION, PRICE, QUANTITY) " +
+                "VALUES (?, ?, ?, ?)");
         preparedStatement.setString(1, name);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        if(resultSet.next()) employee = new Employee(resultSet.getInt(1), resultSet.getString(2),
-                resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
-                resultSet.getInt(6));
-
-        cleanConnection();
-
-        return employee;
-    }
-
-    public void addEmployee(String fullName, String address, String email, String phone, int salary)
-            throws SQLException, ClassNotFoundException {
-        connect();
-
-        PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO EMPLOYEES" +
-                "(FULLNAME, ADDRESS, EMAIL, PHONE, SALARY) " +
-                "VALUES " +
-                "(?, ?, ?, ?, ?)");
-        preparedStatement.setNString(1, fullName);
-        preparedStatement.setNString(2, address);
-        preparedStatement.setString(3, email);
-        preparedStatement.setString(4, phone);
-        preparedStatement.setInt(5, salary);
+        preparedStatement.setString(2, description);
+        preparedStatement.setDouble(3, price);
+        preparedStatement.setInt(4, quantity);
         preparedStatement.execute();
 
         cleanConnection();
     }
 
-    public void editEmloyee(int id, String fullName, String address, String email, String phone, int salary)
+    public void editProduct(int id, String name, String description, double price, int quantity)
             throws SQLException, ClassNotFoundException {
         connect();
 
-        PreparedStatement preparedStatement = conn.prepareStatement("UPDATE EMPLOYEES " +
-                "SET FULLNAME = ?, ADDRESS = ?, EMAIL = ?, PHONE = ?, SALARY = ? " +
+        PreparedStatement preparedStatement = conn.prepareStatement("UPDATE PRODUCTS " +
+                "SET NAME = ?, DESCRIPTION = ?, PRICE = ?, QUANTITY = ? " +
                 "WHERE ID = ?");
-        preparedStatement.setNString(1, fullName);
-        preparedStatement.setNString(2, address);
-        preparedStatement.setString(3, email);
-        preparedStatement.setString(4, phone);
-        preparedStatement.setInt(5, salary);
-        preparedStatement.setInt(6, id);
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, description);
+        preparedStatement.setDouble(3, price);
+        preparedStatement.setInt(4, quantity);
+        preparedStatement.setInt(5, id);
         preparedStatement.execute();
 
         cleanConnection();
     }
 
-    public void deleteEmployee(int id) throws SQLException, ClassNotFoundException {
+    public void deleteProduct(int id) throws SQLException, ClassNotFoundException {
         connect();
 
-        PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM EMPLOYEES WHERE ID = ?");
+        PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM PRODUCTS WHERE ID = ?");
         preparedStatement.setInt(1, id);
         preparedStatement.execute();
 

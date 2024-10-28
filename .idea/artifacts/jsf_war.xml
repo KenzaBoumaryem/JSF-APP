@@ -1,6 +1,12 @@
 <component name="ArtifactManager">
   <artifact type="war" build-on-make="true" name="jsf:war">
     <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>jsf</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="archive" name="jsf.war">
       <element id="artifact" artifact-name="jsf:war exploded" />
     </root>
