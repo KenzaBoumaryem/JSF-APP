@@ -11,16 +11,60 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>List of Products - JSF Application</title>
+    <style>
+        /* Custom styles for layout */
+        .sidebar {
+            height: 100%;
+            padding-top: 20px;
+            position: fixed;
+            left: 0;
+            top: 60px; /* Adjust for navbar height */
+            bottom: 0;
+            width: 250px;
+            background-color: #f8f9fa; /* Light background for sidebar */
+            overflow-y: auto; /* Scroll if content overflows */
+        }
+
+        .content {
+            margin-left: 270px; /* Leave space for sidebar */
+            padding: 20px;
+        }
+
+        .header {
+            padding: 10px;
+            background-color: #343a40; /* Dark background for header */
+            color: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure it is above other content */
+        }
+    </style>
 </h:head>
-<h:body style="padding: 60px; min-height: 2000px;">
-    <b:navBar brand="JSF Example" brandHref="#" fixed="top" inverse="true">
-        <b:navbarLinks>
-            <b:form>
-                <b:commandButton look="default" action="#{login.logout()}" value="Logout"></b:commandButton>
-            </b:form>
-        </b:navbarLinks>
-    </b:navBar>
-    <b:container>
+<h:body style="padding-top: 60px;">
+    <div class="header">
+        <b:navBar brand="Product Management" brandHref="#" fixed="top" inverse="true">
+            <b:navbarLinks>
+                <b:form>
+                    <b:commandButton look="default" action="#{login.logout()}" value="Logout"></b:commandButton>
+                </b:form>
+            </b:navbarLinks>
+        </b:navBar>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <b:panel title="Navigation" look="default">
+            <ul class="list-group">
+                <li class="list-group-item"><h:link outcome="home" value="Home" /></li>
+
+                <li class="list-group-item"><h:link outcome="add" value="Add Product" /></li>
+            </ul>
+        </b:panel>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
         <h:link outcome="add" styleClass="btn btn-success" style="margin-bottom: 20px" value="Add"/>
         <br/>
         <h:form id="form">
@@ -39,6 +83,6 @@
                 </b:dataTableColumn>
             </b:dataTable>
         </h:form>
-    </b:container>
+    </div>
 </h:body>
 </html>

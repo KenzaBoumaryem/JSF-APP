@@ -1,8 +1,6 @@
 package com.sakadream.jsf.bean;
 
-/**
- * Created by Phan Ba Hai on 17/07/2017.
- */
+
 public class Product {
     private int id;
     private String name;

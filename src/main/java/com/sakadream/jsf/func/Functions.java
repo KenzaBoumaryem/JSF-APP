@@ -9,28 +9,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Phan Ba Hai on 17/07/2017.
- */
+
 public class Functions {
     private Connection conn;
 
-    private void connect() throws ClassNotFoundException, SQLException {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        try {
-            String username = "sa";
-            String password = "kniza123##@";
-            String url = "jdbc:sqlserver://sakadream-sof305.database.windows.net:1433;databaseName=SOF305";
 
-            conn = DriverManager.getConnection(url, username, password);
-        } catch (Exception e) {
-            String username = "sa";
-            String password = "kniza123##@";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=SOF305_Offline";
-
-            conn = DriverManager.getConnection(url, username, password);
-        }
-    }
 
     private void cleanConnection() throws SQLException {
         conn.close();

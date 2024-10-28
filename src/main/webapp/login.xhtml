@@ -11,11 +11,79 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Login - JSF Application</title>
+    <style>
+        /* Background gradient */
+        body {
+            background: linear-gradient(to right, #4a90e2, #50b3a2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        /* Form container with higher transparency */
+        .login-container {
+            background: rgba(255, 255, 255, 0.35); /* Increased transparency */
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            max-height: 450px;
+            text-align: center;
+        }
+        /* Form elements */
+        .login-container legend {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 1.5rem;
+        }
+        .login-container b\:inputText,
+        .login-container b\:inputSecret {
+            margin-bottom: 1.2rem;
+            padding: 0.6rem;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+        /* Buttons */
+        .login-container .login-button,
+        .login-container .guest-button {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        .login-container .login-button {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-container .login-button:hover {
+            background-color: #3b7cb1;
+        }
+        .login-container .guest-button {
+            background-color: #e7e7e7;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 0.5rem; /* Space below Login button */
+        }
+        .login-container .guest-button:hover {
+            background-color: #d0d0d0;
+        }
+    </style>
 </h:head>
-<h:body style="padding: 60px; min-height: 2000px;">
-    <b:navBar brand="JSF Example" brandHref="#" fixed="top" inverse="true"></b:navBar>
-    <b:container>
-        <b:column colMd="4" offset="4">
+<h:body>
+    <b:container class="login-container">
+        <b:column>
             <b:form id="loginForm">
                 <legend>Login</legend>
                 <b:inputText id="username" name="username" placeholder="Username" required="true" requiredMessage="Please Input Username!">
@@ -30,8 +98,8 @@
                     </f:facet>
                 </b:inputSecret>
                 <b:messages for="password"/>
-                <b:commandButton look="primary" style="margin-right: 10px" action="#{login.login()}" value="Login"></b:commandButton>
-                <h:link outcome="home-guest" styleClass="btn btn-default" value="Login as guest"></h:link>
+                <b:commandButton look="primary" action="#{login.login()}" value="Login" styleClass="login-button"></b:commandButton>
+                <h:link outcome="home-guest" styleClass="guest-button" value="Login as guest"></h:link>
                 <b:message for="loginForm"/>
             </b:form>
         </b:column>
