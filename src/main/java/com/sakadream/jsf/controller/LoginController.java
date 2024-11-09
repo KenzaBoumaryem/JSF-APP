@@ -10,9 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-/**
- * Created by Phan Ba Hai on 17/07/2017.
- */
+
 
 @ManagedBean(name = "login", eager = true)
 @RequestScoped

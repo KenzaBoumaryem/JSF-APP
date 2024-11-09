@@ -9,9 +9,7 @@ import javax.faces.validator.ValidatorException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Phan Ba Hai on 21/07/2017.
- */
+
 
 @FacesValidator("com.sakadream.jsf.validator.EmailValidator")
 public class EmailValidator implements Validator {

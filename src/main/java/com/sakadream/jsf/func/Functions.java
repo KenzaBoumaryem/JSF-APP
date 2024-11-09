@@ -24,6 +24,7 @@ public class Functions {
             // Connect to MySQL
             conn = DriverManager.getConnection(url, username, password);
 
+
             // Create database if it doesn't exist
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS employeeDB");

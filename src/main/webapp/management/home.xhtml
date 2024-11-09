@@ -81,8 +81,18 @@
                     </h:link>
                     <b:commandButton value="Delete" look="danger" icon="trash" action="#{prod.deleteProduct(product.id)}"
                                      onclick="return confirm('Do you want to remove this product?')"/>
+                    <h:commandButton value="Download Info"
+                                     actionListener="#{prod.downloadProductInfo(product)}"
+                                     styleClass="btn btn-primary"/>
                 </b:dataTableColumn>
+
             </b:dataTable>
+            <h:column>
+                <f:facet name="header">Download</f:facet>
+                <h:commandButton value="Download Info"
+                                 actionListener="#{prod.downloadProductInfo(product)}"
+                                 styleClass="btn btn-primary"/>
+            </h:column>
         </h:form>
     </div>
 </h:body>

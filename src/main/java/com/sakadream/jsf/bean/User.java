@@ -1,8 +1,6 @@
 package com.sakadream.jsf.bean;
 
-/**
- * Created by Phan Ba Hai on 17/07/2017.
- */
+
 public class User {
     private int id;
     private String username;

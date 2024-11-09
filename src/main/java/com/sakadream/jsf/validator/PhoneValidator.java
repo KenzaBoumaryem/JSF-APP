@@ -7,9 +7,6 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-/**
- * Created by Phan Ba Hai on 21/07/2017.
- */
 
 @FacesValidator("com.sakadream.jsf.validator.PhoneValidator")
 public class PhoneValidator implements Validator {

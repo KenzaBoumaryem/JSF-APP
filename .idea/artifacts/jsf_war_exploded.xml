@@ -23,6 +23,7 @@
           <element id="library" level="project" name="Maven: net.bootsfaces:bootsfaces:1.1.2" />
           <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.3.1" />
           <element id="library" level="project" name="Maven: javax.activation:javax.activation-api:1.2.0" />
+          <element id="library" level="project" name="Maven: com.itextpdf:itextpdf:5.5.13.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
