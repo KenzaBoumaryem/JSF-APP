@@ -2,15 +2,18 @@ package com.sakadream.jsf.func;
 
 import com.sakadream.jsf.bean.Product;
 
+import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class Functions {
+@Stateless
+public class Functions implements Serializable {
     private Connection conn;
 
 
@@ -18,7 +21,7 @@ public class Functions {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try {
             String username = "root"; // Replace with your MySQL username
-            String password = "18620"; // Replace with your MySQL password
+            String password = ""; // Replace with your MySQL password
             String url = "jdbc:mysql://localhost:3306/"; // Just connect to the host
 
             // Connect to MySQL
@@ -35,7 +38,7 @@ public class Functions {
             conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             String username = "root"; // Replace with your local MySQL username
-            String password = "18620"; // Replace with your local MySQL password
+            String password = ""; // Replace with your local MySQL password
             String url = "jdbc:mysql://localhost:3306/"; // Just connect to the host
 
             // Connect to local MySQL

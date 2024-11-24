@@ -3,6 +3,7 @@ package com.sakadream.jsf.controller;
 import com.sakadream.jsf.bean.Product;
 import com.sakadream.jsf.func.Functions;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -21,7 +22,8 @@ import java.io.OutputStream;
 @RequestScoped
 public class ProductController implements Serializable {
 
-    private Functions func = new Functions();
+    @EJB
+    private Functions func;
 
     // Show all products
     public List<Product> showAllProducts() throws SQLException, ClassNotFoundException {

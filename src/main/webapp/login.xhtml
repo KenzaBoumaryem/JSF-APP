@@ -86,21 +86,28 @@
         <b:column>
             <b:form id="loginForm">
                 <legend>Login</legend>
-                <b:inputText id="username" name="username" placeholder="Username" required="true" requiredMessage="Please Input Username!">
+                <b:messages globalOnly="true"/>
+
+                <b:inputText id="username" value="#{login.username}" required="true"
+                             requiredMessage="Please Input Username!">
                     <f:facet name="prepend">
                         <b:icon name="user" />
                     </f:facet>
                 </b:inputText>
-                <b:messages for="username"/>
-                <b:inputSecret id="password" name="password" placeholder="Password" required="true" requiredMessage="Please Input Password!">
+                <b:message for="username"/>
+
+                <b:inputSecret id="password" value="#{login.password}" required="true"
+                               requiredMessage="Please Input Password!">
                     <f:facet name="prepend">
                         <b:icon name="lock"/>
                     </f:facet>
                 </b:inputSecret>
-                <b:messages for="password"/>
-                <b:commandButton look="primary" action="#{login.login()}" value="Login" styleClass="login-button"></b:commandButton>
-                <h:link outcome="home-guest" styleClass="guest-button" value="Login as guest"></h:link>
-                <b:message for="loginForm"/>
+                <b:message for="password"/>
+
+                <b:commandButton look="primary" action="#{login.login()}" value="Login"
+                                 styleClass="login-button" ajax="true" update="@form"/>
+
+                <h:link outcome="home-guest" styleClass="guest-button" value="Login as guest"/>
             </b:form>
         </b:column>
     </b:container>

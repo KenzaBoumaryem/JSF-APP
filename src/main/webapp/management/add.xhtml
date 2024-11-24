@@ -16,7 +16,7 @@
     <b:navBar brand="JSF Example" brandHref="#" fixed="top" inverse="true">
         <b:navbarLinks>
             <b:form>
-                <b:commandButton look="default" action="#{login.logout()}" value="Logout"></b:commandButton>
+                <b:commandButton look="default" action="#{login.logout()}" value="Déconnexion"></b:commandButton>
             </b:form>
         </b:navbarLinks>
     </b:navBar>
@@ -49,8 +49,8 @@
 
             </b:inputText>
             <b:messages for="quantity"/>
-            <b:commandButton look="primary" style="margin-right: 10px" action="#{prod.addProduct()}" value="Add Product"></b:commandButton>
-            <b:button look="default" outcome="home" value="Back to Home"></b:button>
+            <b:commandButton look="primary" style="margin-right: 10px" action="#{prod.addProduct()}" value="ajouter produit"></b:commandButton>
+            <b:button look="default" outcome="home" value="retour"></b:button>
         </b:form>
     </b:container>
 </h:body>
