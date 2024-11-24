@@ -12,13 +12,14 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import javax.faces.context.ExternalContext;
+import javax.inject.Named;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
  * ProductController for managing products.
  */
-@ManagedBean(name = "prod", eager = true)
+@Named("prod")
 @RequestScoped
 public class ProductController implements Serializable {
 
