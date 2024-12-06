@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -29,22 +29,35 @@
 
             <!-- Products Section -->
             <h3>Products</h3>
-            <ui:repeat value="#{commandBean.productList}" var="productOrder">
-                <h:panelGrid columns="2">
-                    <h:outputLabel value="Product: " for="product"/>
-                    <h:selectOneMenu id="product" value="#{productOrder.product}">
-                        <f:selectItems value="#{commandBean.products}" var="product"
-                                       itemValue="#{product}" itemLabel="#{product.name}"/>
-                    </h:selectOneMenu>
 
-                    <h:outputLabel value="Quantity: " for="quantity"/>
-                    <h:inputText id="quantity" value="#{productOrder.quantity}"/>
-                </h:panelGrid>
-            </ui:repeat>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Product: " for="product"/>
+                <h:selectOneMenu id="product" value="#{commandBean.selectedProductId}">
+                    <f:selectItems value="#{commandBean.products}" var="product"
+                                   itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                </h:selectOneMenu>
 
+                <h:outputLabel value="Quantity: " for="quantity"/>
+                <h:inputText id="quantity" value="#{commandBean.selectedQuantity}"/>
+            </h:panelGrid>
 
             <!-- Add Product Button -->
-            <b:commandButton value="Add Product" look="info" action="#{commandBean.addProductOrder}" update="@form" />
+            <b:commandButton value="Add Product" look="info">
+                <f:ajax execute="@form" render="productListTable"/>
+            </b:commandButton>
+
+            <!-- Display List of Products Added -->
+            <h3>Added Products</h3>
+            <h:dataTable id="productListTable" value="#{commandBean.productList}" var="productOrder" border="1">
+                <h:column>
+                    <f:facet name="header">Product</f:facet>
+                    #{productOrder.product.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Quantity</f:facet>
+                    #{productOrder.quantity}
+                </h:column>
+            </h:dataTable>
 
             <!-- Submit Button -->
             <b:commandButton value="Submit Command" look="primary" action="#{commandBean.submitCommand}" />

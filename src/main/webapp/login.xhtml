@@ -88,7 +88,7 @@
                 <legend>Login</legend>
                 <b:messages globalOnly="true"/>
 
-                <b:inputText id="username" value="#{login.username}" required="true"
+                <b:inputText id="username" value="#{auth.username}" required="true"
                              requiredMessage="Please Input Username!">
                     <f:facet name="prepend">
                         <b:icon name="user" />
@@ -96,7 +96,7 @@
                 </b:inputText>
                 <b:message for="username"/>
 
-                <b:inputSecret id="password" value="#{login.password}" required="true"
+                <b:inputSecret id="password" value="#{auth.password}" required="true"
                                requiredMessage="Please Input Password!">
                     <f:facet name="prepend">
                         <b:icon name="lock"/>
@@ -104,7 +104,7 @@
                 </b:inputSecret>
                 <b:message for="password"/>
 
-                <b:commandButton look="primary" action="#{login.login()}" value="Login"
+                <b:commandButton look="primary" action="#{auth.login()}" value="Login"
                                  styleClass="login-button" ajax="true" update="@form"/>
 
                 <h:link outcome="home-guest" styleClass="guest-button" value="Login as guest"/>
@@ -112,4 +112,5 @@
         </b:column>
     </b:container>
 </h:body>
+
 </html>

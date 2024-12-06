@@ -204,7 +204,7 @@
         <b:navBar brand="Gestion des Produits" brandHref="#" fixed="top" inverse="true">
             <b:navbarLinks>
                 <b:form>
-                    <b:commandButton look="default" action="#{login.logout()}" value="Déconnexion">
+                    <b:commandButton look="default" action="#{auth.logout()}" value="Déconnexion">
                         <i class="fas fa-sign-out-alt"></i>
                     </b:commandButton>
                 </b:form>
@@ -251,8 +251,8 @@
                 <b:dataTableColumn label="Actions">
                     <div class="action-buttons">
                         <h:link outcome="edit" styleClass="btn btn-primary" title="Modifier">
+                            <f:param name="productId" value="#{product.id}"/>
                             <i class="fas fa-edit"></i> Modifier
-                            <f:param name="id" value="#{product.id}"/>
                         </h:link>
                         <b:commandButton look="danger"
                                          action="#{prod.deleteProduct(product.id)}"
@@ -261,10 +261,10 @@
                             <i class="fas fa-trash"></i> Supprimer
                         </b:commandButton>
                         <h:commandButton value="Télécharger"
-                                         actionListener="#{prod.downloadProductInfo(product)}"
+                                         action="#{prod.downloadProductInfo(product)}"
                                          styleClass="btn btn-primary">
-
                         </h:commandButton>
+
                     </div>
                 </b:dataTableColumn>
             </b:dataTable>

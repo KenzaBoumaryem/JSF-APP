@@ -1,6 +1,7 @@
 package com.sakadream.jsf.bean;
 
 
+
 public class User {
     private int id;
     private String username;
