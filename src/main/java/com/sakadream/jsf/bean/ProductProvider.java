@@ -5,28 +5,18 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
-@Entity
-@Table(name = "product_provider") // Table correspondante
 public class ProductProvider implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
     private int id;
 
-    @Column(nullable = false) // Champ obligatoire
     private String name;
 
-    @Column(length = 500) // Longueur maximale pour la description
     private String description;
 
-    @Column(nullable = false)
     private double price;
 
-    @Column(nullable = false)
     private int quantity;
 
-    @ManyToOne // Relation Many-to-One avec Provider
-    @JoinColumn(name = "provider_id", nullable = false) // Clé étrangère
     private Provider provider;
 
     // Getters et Setters

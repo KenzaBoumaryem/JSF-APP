@@ -1,67 +1,118 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:b="http://bootsfaces.net/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:b="http://bootsfaces.net/ui">
 <h:head>
-    <title>Create Command - JSF Application</title>
+    <title>Liste des Fournisseurs</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Styles similaires à ceux de la première page */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-bg: #ecf0f1;
+            --white: #ffffff;
+        }
+
+        body {
+            background: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .header {
+            background: var(--primary-color);
+            padding: 1rem;
+            color: var(--white);
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .dataTable thead th {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .dataTable tbody tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .btn:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </h:head>
 <h:body>
-    <h:form id="commandForm">
-        <h2>Create Command</h2>
+    <div class="header">Liste des Fournisseurs</div>
 
-        <b:panel title="Command Details" look="default">
-            <!-- Provider Selection -->
-            <b:formGroup label="Select Provider:" labelCol="col-md-2" inputCol="col-md-10">
-                <b:selectOneMenu value="#{commandBean.selectedProviderId}">
-                    <f:selectItems value="#{commandBean.providers}" var="provider" itemValue="#{provider.id}" itemLabel="#{provider.name}"/>
-                </b:selectOneMenu>
-            </b:formGroup>
+    <div class="content" style="padding: 2rem;">
+        <h:form>
+            <b:dataTable value="#{providerController.loadProviders()}" var="provider"
+                         styleClass="dataTable"
+                         responsive="true"
+                         searching="true"
+                         paginated="true"
+                         page-length="10">
+                <b:dataTableColumn value="#{provider.name}" label="Nom du Fournisseur"/>
+                <b:dataTableColumn label="Actions">
+                    <h:commandButton value="Voir Produits" action="#{providerController.selectProvider(provider)}"
+                                     styleClass="btn btn-success">
+                    </h:commandButton>
+                </b:dataTableColumn>
+            </b:dataTable>
+        </h:form>
 
-            <!-- Command Name -->
-            <b:formGroup label="Command Name:" labelCol="col-md-2" inputCol="col-md-10">
-                <b:inputText value="#{commandBean.commandName}" placeholder="Enter command name" />
-            </b:formGroup>
+        <h:panelGroup rendered="#{providerController.selectedProvider != null}" style="margin-top: 2rem;">
+            <h2>Produits pour : #{providerController.selectedProvider.name}</h2>
+            <h:form>
+                <b:dataTable value="#{providerController.selectedProvider.products}" var="product"
+                             styleClass="dataTable"
+                             responsive="true">
+                    <b:dataTableColumn value="#{product.name}" label="Nom du Produit"/>
+                    <b:dataTableColumn value="#{product.description}" label="Description"/>
+                    <b:dataTableColumn value="#{product.price}" label="Prix"/>
+                    <b:dataTableColumn label="Sélectionner">
+                        <h:selectBooleanCheckbox value="#{providerController.selectedProducts[product.id]}"/>
+                    </b:dataTableColumn>
+                </b:dataTable>
+                <h:commandButton value="Ajouter Produits" action="#{providerController.submitSelection}" styleClass="btn btn-success"/>
 
-            <!-- Products Section -->
-            <h3>Products</h3>
+            </h:form>
+        </h:panelGroup>
+    </div>
 
-            <h:panelGrid columns="2">
-                <h:outputLabel value="Product: " for="product"/>
-                <h:selectOneMenu id="product" value="#{commandBean.selectedProductId}">
-                    <f:selectItems value="#{commandBean.products}" var="product"
-                                   itemValue="#{product.id}" itemLabel="#{product.name}"/>
-                </h:selectOneMenu>
+    <div>
+        <h:panelGroup rendered="#{!providerController.cart.isEmpty()}" style="margin-top: 2rem;">
+            <h2>Panier</h2>
+            <h:form>
+                <b:dataTable value="#{providerController.cart}" var="product" styleClass="dataTable" responsive="true">
+                    <b:dataTableColumn value="#{product.name}" label="Nom du Produit"/>
+                    <b:dataTableColumn value="#{product.description}" label="Description"/>
+                    <b:dataTableColumn value="#{product.price}" label="Prix"/>
+                    <b:dataTableColumn label="Supprimer">
+                        <h:commandButton value="X" action="#{providerController.removeFromCart(product)}" styleClass="btn btn-danger"/>
+                    </b:dataTableColumn>
+                </b:dataTable>
+            </h:form>
+        </h:panelGroup>
 
-                <h:outputLabel value="Quantity: " for="quantity"/>
-                <h:inputText id="quantity" value="#{commandBean.selectedQuantity}"/>
-            </h:panelGrid>
-
-            <!-- Add Product Button -->
-            <b:commandButton value="Add Product" look="info">
-                <f:ajax execute="@form" render="productListTable"/>
-            </b:commandButton>
-
-            <!-- Display List of Products Added -->
-            <h3>Added Products</h3>
-            <h:dataTable id="productListTable" value="#{commandBean.productList}" var="productOrder" border="1">
-                <h:column>
-                    <f:facet name="header">Product</f:facet>
-                    #{productOrder.product.name}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Quantity</f:facet>
-                    #{productOrder.quantity}
-                </h:column>
-            </h:dataTable>
-
-            <!-- Submit Button -->
-            <b:commandButton value="Submit Command" look="primary" action="#{commandBean.submitCommand}" />
-        </b:panel>
-    </h:form>
+    </div>
 </h:body>
 </html>

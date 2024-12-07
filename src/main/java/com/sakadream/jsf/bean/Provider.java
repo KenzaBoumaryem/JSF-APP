@@ -1,21 +1,13 @@
 package com.sakadream.jsf.bean;
 
-import jakarta.persistence.*; // Utilisation de Jakarta Persistence API
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
-@Table(name = "provider") // Table correspondante
 public class Provider implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
     private Long id;
 
-    @Column(nullable = false, unique = true) // Nom obligatoire et unique
     private String name;
-
-    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true) // Relation One-to-Many
     private List<ProductProvider> products;
 
     // Constructeurs

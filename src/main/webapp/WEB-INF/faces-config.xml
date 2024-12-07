@@ -57,4 +57,12 @@
             <to-view-id>/management/home.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/management/command.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/management/home.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>
