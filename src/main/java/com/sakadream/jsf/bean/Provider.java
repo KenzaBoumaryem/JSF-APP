@@ -1,24 +1,31 @@
 package com.sakadream.jsf.bean;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity
 public class Provider implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id") // Specifies the column name
     private Long id;
 
+    @Column(name = "name", nullable = false) // Ensure the name is not null
     private String name;
-    private List<ProductProvider> products;
 
-    // Constructeurs
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductProvider> products; // One Provider can have many ProductProviders
+
+    // Constructors
     public Provider() {}
 
-    public Provider(Long id, String name) {
-        this.id = id;
+    public Provider(String name) {
         this.name = name;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }

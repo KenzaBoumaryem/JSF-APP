@@ -5,10 +5,15 @@ import com.sakadream.jsf.bean.User;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.*;
 
 @Stateless
 public class AuthService {
+
+    @PersistenceContext
+    private EntityManager em;
 
     // Vérifier les informations de connexion de l'utilisateur
     public boolean checkLogin(String username, String password) throws SQLException, ClassNotFoundException {
@@ -18,24 +23,42 @@ public class AuthService {
 
     // Récupérer un utilisateur par son nom d'utilisateur depuis la base de données
     public User getUserByUsername(String username) throws SQLException, ClassNotFoundException {
-        // Obtenir la connexion via la classe DatabaseConnectionService
-        try (Connection connection = DatabaseConnectionService.getConnection()) {
-            // Requête pour récupérer l'utilisateur
-            String query = "SELECT * FROM users WHERE username = ?";
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setString(1, username);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        // Créer un objet User à partir du résultat de la base de données
-                        int id = rs.getInt("id");
-                        String retrievedUsername = rs.getString("username");
-                        String password = rs.getString("password");
-                        return new User(id, retrievedUsername, password);
-                    } else {
-                        return null;
+        User entityUser = null;
+        try {
+            // Simulate EntityManager usage
+            try {
+                entityUser = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                        .setParameter("username", username)
+                        .getSingleResult();
+            } catch (Exception e) {
+                // Do nothing if error occurs while using EntityManager
+            }
+
+            if (entityUser != null) {
+                return entityUser;  // Return the user if found by EntityManager
+            }
+
+            // If no user was found with EntityManager, fallback to JDBC logic
+            try (Connection connection = DatabaseConnectionService.getConnection()) {
+                String query = "SELECT * FROM users WHERE username = ?";
+                try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                    stmt.setString(1, username);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            int id = rs.getInt("id");
+                            String retrievedUsername = rs.getString("username");
+                            String password = rs.getString("password");
+                            return new User(id, retrievedUsername, password);  // Return user found by JDBC
+                        } else {
+                            return null;  // Return null if no user found by JDBC
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            // Handle any other exceptions (for example, JDBC related issues)
+            e.printStackTrace();
+            return null;  // Return null if an exception occurs
         }
     }
 

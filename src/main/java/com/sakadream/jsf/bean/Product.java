@@ -1,11 +1,24 @@
 package com.sakadream.jsf.bean;
 
 
+import jakarta.persistence.*;
+
+@Entity
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name", nullable = false) // Ensure the name is not null
     private String name;
+
+    @Column(name = "description", nullable = false) // Ensure the name is not null
     private String description;
+
+    @Column(name = "price", nullable = false)
     private double  price;
+
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     public Product() {

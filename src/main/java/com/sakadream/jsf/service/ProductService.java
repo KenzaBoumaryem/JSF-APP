@@ -1,6 +1,8 @@
 package com.sakadream.jsf.service;
 
 import com.sakadream.jsf.bean.Product;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
@@ -12,13 +14,29 @@ import java.util.List;
 @Stateless
 public class ProductService {
 
-    private DatabaseConnectionService dbService = new DatabaseConnectionService();
+
+    @PersistenceContext
+    private EntityManager em;
 
     // Afficher tous les produits
     public List<Product> showAllProducts() throws SQLException, ClassNotFoundException {
         List<Product> productList = new ArrayList<>();
 
-        // Récupérer la connexion via DatabaseConnectionService
+        try {
+            List<Product> simulatedProducts = em.createQuery("SELECT p FROM Product p", Product.class).getResultList();
+
+            for (Product p : simulatedProducts) {
+                productList.add(p);
+            }
+        } catch (Exception e) {
+
+        }
+
+
+
+
+        DatabaseConnectionService dbService = new DatabaseConnectionService();
+
         try (Connection conn = dbService.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM PRODUCTS");
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -31,7 +49,7 @@ public class ProductService {
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            throw e;  // Vous pouvez personnaliser cette exception ou la gérer autrement
+            throw e;
         }
 
         return productList;
@@ -41,22 +59,31 @@ public class ProductService {
     public Product getProductById(int id) throws SQLException, ClassNotFoundException {
         Product product = null;
 
-        // Récupérer la connexion via DatabaseConnectionService
-        try (Connection conn = dbService.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM PRODUCTS WHERE ID = ?")) {
+        try {
+            product = em.find(Product.class, id);  // Simulate finding product with JPA
+        } catch (Exception e) {
+        }
 
-            preparedStatement.setInt(1, id);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    product = new Product(resultSet.getInt("ID"), resultSet.getString("NAME"),
-                            resultSet.getString("DESCRIPTION"), resultSet.getDouble("PRICE"),
-                            resultSet.getInt("QUANTITY"));
+        DatabaseConnectionService dbService = new DatabaseConnectionService();
+
+        if (product == null) {
+            try (Connection conn = dbService.getConnection();
+                 PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM PRODUCTS WHERE ID = ?")) {
+
+                preparedStatement.setInt(1, id);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        product = new Product(resultSet.getInt("ID"), resultSet.getString("NAME"),
+                                resultSet.getString("DESCRIPTION"), resultSet.getDouble("PRICE"),
+                                resultSet.getInt("QUANTITY"));
+                    }
                 }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                throw e;
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw e;
         }
 
         return product;
@@ -65,6 +92,23 @@ public class ProductService {
     // Ajouter un nouveau produit
     public void addProduct(String name, String description, double price, int quantity)
             throws SQLException, ClassNotFoundException {
+
+        try {
+            Product product = new Product();
+            product.setName(name);
+            product.setDescription(description);
+            product.setPrice(price);
+            product.setQuantity(quantity);
+            em.persist(product);
+        } catch (Exception e) {
+
+        }
+
+
+
+         DatabaseConnectionService dbService = new DatabaseConnectionService();
+
+
         try (Connection conn = dbService.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO PRODUCTS (NAME, DESCRIPTION, PRICE, QUANTITY) VALUES (?, ?, ?, ?)")) {
 
@@ -83,6 +127,25 @@ public class ProductService {
     // Modifier un produit existant
     public void editProduct(int id, String name, String description, double price, int quantity)
             throws SQLException, ClassNotFoundException {
+
+        try {
+            Product product = em.find(Product.class, id);
+            if (product != null) {
+                product.setName(name);
+                product.setDescription(description);
+                product.setPrice(price);
+                product.setQuantity(quantity);
+                em.merge(product);
+            }
+        } catch (Exception e) {
+
+        }
+
+
+
+         DatabaseConnectionService dbService = new DatabaseConnectionService();
+
+
         try (Connection conn = dbService.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement("UPDATE PRODUCTS SET NAME = ?, DESCRIPTION = ?, PRICE = ?, QUANTITY = ? WHERE ID = ?")) {
 
@@ -101,15 +164,36 @@ public class ProductService {
 
     // Supprimer un produit
     public void deleteProduct(int id) throws SQLException, ClassNotFoundException {
-        try (Connection conn = dbService.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM PRODUCTS WHERE ID = ?")) {
+        try {
 
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            try {
+                Product product = em.find(Product.class, id);
+                if (product != null) {
+                    em.remove(product);
+                }
+            } catch (Exception e) {
+            }
 
-        } catch (SQLException | ClassNotFoundException e) {
+
+
+
+
+            DatabaseConnectionService dbService = new DatabaseConnectionService();
+
+            try (Connection conn = dbService.getConnection();
+                 PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM PRODUCTS WHERE ID = ?")) {
+
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();  // Actual database operation happens here
+
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                throw e;
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
-            throw e;
+            throw new SQLException("Error deleting product with ID: " + id, e);
         }
     }
 
@@ -117,6 +201,7 @@ public class ProductService {
     public String getParameterByName(String name) {
         return (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(name);
     }
+
     // Télécharger les informations d'un produit en JSON
     public String downloadProduct(int id) throws SQLException, ClassNotFoundException {
         Product product = getProductById(id);

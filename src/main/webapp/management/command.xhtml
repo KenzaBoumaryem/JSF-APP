@@ -91,6 +91,12 @@
                     <b:dataTableColumn label="Sélectionner">
                         <h:selectBooleanCheckbox value="#{providerController.selectedProducts[product.id]}"/>
                     </b:dataTableColumn>
+                    <b:dataTableColumn label="Quantité">
+                        <h:inputText value="#{providerController.selectedQuantities[product.id]}"
+                                     converter="javax.faces.Integer" />
+
+                    </b:dataTableColumn>
+
                 </b:dataTable>
                 <h:commandButton value="Ajouter Produits" action="#{providerController.submitSelection}" styleClass="btn btn-success"/>
 
@@ -105,11 +111,15 @@
                 <b:dataTable value="#{providerController.cart}" var="product" styleClass="dataTable" responsive="true">
                     <b:dataTableColumn value="#{product.name}" label="Nom du Produit"/>
                     <b:dataTableColumn value="#{product.description}" label="Description"/>
-                    <b:dataTableColumn value="#{product.price}" label="Prix"/>
+                    <b:dataTableColumn value="#{product.price * product.quantity}" label="Prix Total"/>
+                    <b:dataTableColumn value="#{product.quantity}" label="Quantité"/>
+                    <b:dataTableColumn value="#{product.provider.name}" label="Fournisseur"/>
                     <b:dataTableColumn label="Supprimer">
                         <h:commandButton value="X" action="#{providerController.removeFromCart(product)}" styleClass="btn btn-danger"/>
                     </b:dataTableColumn>
                 </b:dataTable>
+                <h:commandButton value="Confirmer la commande" action="#{providerController.confirmOrder}" styleClass="btn btn-success"/>
+
             </h:form>
         </h:panelGroup>
 

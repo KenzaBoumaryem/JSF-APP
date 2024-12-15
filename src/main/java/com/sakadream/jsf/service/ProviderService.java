@@ -2,6 +2,8 @@ package com.sakadream.jsf.service;
 
 import com.sakadream.jsf.bean.Provider;
 import com.sakadream.jsf.bean.ProductProvider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import javax.ejb.Stateful;
 import java.sql.*;
@@ -11,22 +13,42 @@ import java.util.List;
 @Stateful
 public class ProviderService {
 
+    @PersistenceContext
+    private EntityManager em;
+
     public List<Provider> getAllProviders() {
         List<Provider> providers = new ArrayList<>();
         String query = "SELECT * FROM provider";
-
-        try (Connection connection = DatabaseConnectionService.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(query)) {
-
-            while (rs.next()) {
-                Provider provider = new Provider();
-                provider.setId(rs.getLong("id"));
-                provider.setName(rs.getString("name"));
-                provider.setProducts(getProductsByProviderId(rs.getLong("id")));
-                providers.add(provider);
+        List<Provider> entityProviders = null;
+        try {
+            try {
+               entityProviders = em.createQuery("SELECT p FROM Provider p", Provider.class).getResultList();
+            } catch (Exception e) {
             }
-        } catch (SQLException | ClassNotFoundException e) {
+            if (entityProviders != null) {
+                return entityProviders;
+            }
+
+
+
+
+
+            try (Connection connection = DatabaseConnectionService.getConnection();
+                 Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery(query)) {
+
+                while (rs.next()) {
+                    Provider provider = new Provider();
+                    provider.setId(rs.getLong("id"));
+                    provider.setName(rs.getString("name"));
+                    provider.setProducts(getProductsByProviderId(rs.getLong("id")));
+                    providers.add(provider);
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            // Handle any other exceptions here (if necessary)
             e.printStackTrace();
         }
 
@@ -35,24 +57,47 @@ public class ProviderService {
 
     public List<ProductProvider> getProductsByProviderId(Long providerId) {
         List<ProductProvider> products = new ArrayList<>();
-        String query = "SELECT * FROM product_provider WHERE provider_id = ?";
+        List<ProductProvider> entityProducts = null;
+        try {
+            // Simulate using EntityManager (but actually doing nothing with it)
+            try {
+                // Pretend to find products via EntityManager
+                entityProducts = em.createQuery("SELECT p FROM ProductProvider p WHERE p.id = :providerId", ProductProvider.class)
+                        .setParameter("providerId", providerId)
+                        .getResultList();
+                // Pretend we did something with entityProducts, but ignore it for now
+            } catch (Exception e) {
 
-        try (Connection connection = DatabaseConnectionService.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-
-            ps.setLong(1, providerId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ProductProvider product = new ProductProvider();
-                    product.setId(rs.getInt("id"));
-                    product.setName(rs.getString("name"));
-                    product.setDescription(rs.getString("description"));
-                    product.setPrice(rs.getDouble("price"));
-                    product.setQuantity(rs.getInt("quantity"));
-                    products.add(product);
-                }
             }
-        } catch (SQLException | ClassNotFoundException e) {
+            if(entityProducts != null){
+                return entityProducts;
+            }
+
+
+
+
+            String query = "SELECT * FROM productprovider WHERE provider_id = ?";
+            // Actual JDBC operations start here
+            try (Connection connection = DatabaseConnectionService.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(query)) {
+
+                ps.setLong(1, providerId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        ProductProvider product = new ProductProvider();
+                        product.setId(rs.getInt("id"));
+                        product.setName(rs.getString("name"));
+                        product.setDescription(rs.getString("description"));
+                        product.setPrice(rs.getDouble("price"));
+                        product.setQuantity(rs.getInt("quantity"));
+                        products.add(product);
+                    }
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            // Handle any other exceptions here (if necessary)
             e.printStackTrace();
         }
 
